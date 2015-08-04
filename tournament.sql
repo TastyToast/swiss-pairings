@@ -19,10 +19,9 @@ CREATE TABLE players (
 
 -- Matches Table
 CREATE TABLE matches (
-  player1 INTEGER REFERENCES players(id),
-  player2 INTEGER REFERENCES players(id),
-  winner INTEGER NULL REFERENCES players(id),
-  PRIMARY KEY (player1, player2) -- Ensure that players are only matched once
+  winner INTEGER REFERENCES players(id),
+  loser INTEGER REFERENCES players(id),
+  PRIMARY KEY (winner, loser) -- Ensure that players are only matched once
 );
 
 -- Wins View. Shows the number of wins for each Player
@@ -34,9 +33,9 @@ CREATE VIEW wins AS
 
 -- Match_Count View. Shows the number of matches for each player.
 CREATE VIEW match_count AS
-  SELECT players.id AS player, COUNT(player1) as num_matches
+  SELECT players.id AS player, COUNT(winner) as num_matches
   FROM players LEFT JOIN matches
-  ON players.id = player1 OR players.id = player2
+  ON players.id = winner OR players.id = loser
   GROUP BY players.id;
 
 -- Standings View. Shows the standings for each player

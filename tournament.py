@@ -89,8 +89,8 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     db, cursor = connect()
-    query = "INSERT INTO matches (player1, player2, winner) VALUES (%s, %s, %s);"
-    param = (winner, loser, winner,)
+    query = "INSERT INTO matches (winner, loser) VALUES (%s, %s);"
+    param = (winner, loser,)
     cursor.execute(query, param)
     db.commit()
     db.close()
@@ -98,7 +98,7 @@ def reportMatch(winner, loser):
 def getMatches():
     """ Returns a list of matches played """
     db, cursor = connect()
-    query = "SELECT player1, player2 FROM matches;"
+    query = "SELECT winner, loser FROM matches;"
     cursor.execute(query)
     matches = cursor.fetchall()
     db.close()
