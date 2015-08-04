@@ -19,7 +19,8 @@ def connect(database_name="tournament"):
 def deleteMatches():
     """Remove all the match records from the database."""
     db, cursor = connect()
-    cursor.execute("DELETE FROM matches")
+    query = "DELETE FROM matches;"
+    cursor.execute(query)
     db.commit()
     db.close()
 
@@ -27,7 +28,8 @@ def deleteMatches():
 def deletePlayers():
     """Remove all the player records from the database."""
     db, cursor = connect()
-    cursor.execute("DELETE FROM players")
+    query = "DELETE FROM players;"
+    cursor.execute(query)
     db.commit()
     db.close()
 
@@ -35,7 +37,8 @@ def deletePlayers():
 def countPlayers():
     """Returns the number of players currently registered."""
     db, cursor = connect()
-    cursor.execute("SELECT count(*) FROM players");
+    query = "SELECT count(*) FROM players;"
+    cursor.execute(query);
     players = [int(row[0]) for row in cursor.fetchall()][0];
     db.close()
     return players
@@ -51,7 +54,9 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
     db, cursor = connect()
-    cursor.execute("INSERT INTO players VALUES(%s)", (name,))
+    query = "INSERT INTO players VALUES(%s);"
+    param = (name,)
+    cursor.execute(query, param)
     db.commit()
     db.close()
 
@@ -70,7 +75,8 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     db, cursor = connect()
-    cursor.execute("SELECT id, name, wins, matches FROM standings ORDER BY wins DESC;")
+    query = "SELECT id, name, wins, matches FROM standings ORDER BY wins DESC;"
+    cursor.execute(query)
     results = cursor.fetchall()
     db.close()
     return results
@@ -83,15 +89,17 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     db, cursor = connect()
-    cursor.execute("INSERT INTO matches (player1, player2, winner) VALUES (%s, %s, %s);",
-        (winner, loser, winner,))
+    query = "INSERT INTO matches (player1, player2, winner) VALUES (%s, %s, %s);"
+    param = (winner, loser, winner,)
+    cursor.execute(query, param)
     db.commit()
     db.close()
 
 def getMatches():
     """ Returns a list of matches played """
     db, cursor = connect()
-    cursor.execute("SELECT player1, player2 FROM matches;")
+    query = "SELECT player1, player2 FROM matches;"
+    cursor.execute(query)
     matches = cursor.fetchall()
     db.close()
     return matches
